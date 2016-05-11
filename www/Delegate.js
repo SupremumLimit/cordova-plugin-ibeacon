@@ -17,8 +17,8 @@
  under the License.
  */
 
-var _ = require('com.unarin.cordova.beacon.underscorejs');
-var Regions = require('com.unarin.cordova.beacon.Regions');
+var _ = require('com.cloudscapelabs.cordova.ibeacon.underscorejs');
+var Regions = require('com.cloudscapelabs.cordova.ibeacon.Regions');
 
 
 /**

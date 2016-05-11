@@ -1,9 +1,9 @@
 {
-  "name": "com.unarin.cordova.beacon",
+  "name": "com.cloudscapelabs.cordova.ibeacon",
   "version": "3.4.1",
   "description": "Proximity Beacon Monitoring and Transmission Plugin (supporting iBeacons)",
   "cordova": {
-    "id": "com.unarin.cordova.beacon",
+    "id": "com.cloudscapelabs.cordova.ibeacon",
     "platforms": [
       "ios",
       "android"
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/petermetz/cordova-plugin-ibeacon.git"
+    "url": "git+https://github.com/SupremumLimit/cordova-plugin-ibeacon.git"
   },
   "keywords": [
     "cordova",
@@ -23,10 +23,10 @@
     "cordova-ios",
     "cordova-android"
   ],
-  "author": "Peter Metz (Somogyvari) <peter.metz@unarin.com>",
+  "author": "Original author: Peter Metz (Somogyvari) <peter.metz@unarin.com>",
   "license": "Apache 2.0",
   "bugs": {
-    "url": "https://github.com/petermetz/cordova-plugin-ibeacon/issues"
+    "url": "https://github.com/SupremumLimit/cordova-plugin-ibeacon/issues"
   },
-  "homepage": "https://github.com/petermetz/cordova-plugin-ibeacon"
+  "homepage": "https://github.com/SupremumLimit/cordova-plugin-ibeacon"
 }

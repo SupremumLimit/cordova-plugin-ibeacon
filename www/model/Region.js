@@ -17,7 +17,7 @@
  under the License.
  */
 
-var _ = require('com.unarin.cordova.beacon.underscorejs');
+var _ = require('com.cloudscapelabs.cordova.ibeacon.underscorejs');
 
 /**
  * Base class for different types of regions that the [LocationManager] can monitor.

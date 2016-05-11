@@ -17,10 +17,10 @@
  under the License.
  */
 
-var _ = require('com.unarin.cordova.beacon.underscorejs');
-var CircularRegion = require('com.unarin.cordova.beacon.CircularRegion');
-var BeaconRegion = require('com.unarin.cordova.beacon.BeaconRegion');
-var Region = require('com.unarin.cordova.beacon.Region');
+var _ = require('com.cloudscapelabs.cordova.ibeacon.underscorejs');
+var CircularRegion = require('com.cloudscapelabs.cordova.ibeacon.CircularRegion');
+var BeaconRegion = require('com.cloudscapelabs.cordova.ibeacon.BeaconRegion');
+var Region = require('com.cloudscapelabs.cordova.ibeacon.Region');
 
 
 /**
