@@ -90,9 +90,10 @@ LocationManager.prototype.setDelegate = function(newDelegate) {
  */
 LocationManager.prototype._registerDelegateCallbackId = function () {
 	this.appendToDeviceLog('registerDelegateCallbackId()');
-
+	var that = this;
 	return new Promise(function (resolve, reject) {
-		exec(_.bind(this._onDelegateCallback, this, resolve), _.bind(this._onDelegateCallback, this, resolve),
+		that.appendToDeviceLog('calling registerDelegateCallbackId()');
+		exec(_.bind(that._onDelegateCallback, that, resolve), _.bind(that._onDelegateCallback, that, resolve),
 			"LocationManager", "registerDelegateCallbackId", []);
 	});
 };
