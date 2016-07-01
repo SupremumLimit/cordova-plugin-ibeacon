@@ -1382,7 +1382,7 @@ public class LocationManager extends CordovaPlugin implements BeaconConsumer {
     private void debugLog(String message) {
         if (debugEnabled) {
             Log.d(TAG, message);
-            webView.sendJavascript("console.debug('[" + TAG + "] " + warning + "')");
+            webView.sendJavascript("console.debug('[" + TAG + "] " + message + "')");
         }
     }
 
