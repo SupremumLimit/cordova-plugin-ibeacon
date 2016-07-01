@@ -67,7 +67,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class LocationManager extends CordovaPlugin implements BeaconConsumer {
 
-    public static final String TAG = "com.cloudscapelabs.ibeacon";
+    public static final String TAG = "ibeacon";
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
     private static final String FOREGROUND_BETWEEN_SCAN_PERIOD_NAME = "com.cloudscapelabs.cordova.ibeacon.android.altbeacon.ForegroundBetweenScanPeriod";
     private static final int DEFAULT_FOREGROUND_BETWEEN_SCAN_PERIOD = 0;
@@ -107,7 +107,7 @@ public class LocationManager extends CordovaPlugin implements BeaconConsumer {
         final int foregroundBetweenScanPeriod = this.preferences.getInteger(
                 FOREGROUND_BETWEEN_SCAN_PERIOD_NAME, DEFAULT_FOREGROUND_BETWEEN_SCAN_PERIOD);
 
-        Log.i(TAG, "Determined config value FOREGROUND_BETWEEN_SCAN_PERIOD: " +
+        debugLog("Determined config value FOREGROUND_BETWEEN_SCAN_PERIOD: " +
                 String.valueOf(foregroundBetweenScanPeriod));
 
         iBeaconManager = BeaconManager.getInstanceForApplication(cordovaActivity);
@@ -225,8 +225,8 @@ public class LocationManager extends CordovaPlugin implements BeaconConsumer {
     private void tryToRequestMarshmallowLocationPermission() {
 
         if (Build.VERSION.SDK_INT < BUILD_VERSION_CODES_M) {
-            Log.i(TAG, "tryToRequestMarshmallowLocationPermission() skipping because API code is " +
-                    "below criteria: " + String.valueOf(Build.VERSION.SDK_INT));
+            debugLog("tryToRequestMarshmallowLocationPermission() skipping because API code is " +
+                     "below criteria: " + String.valueOf(Build.VERSION.SDK_INT));
             return;
         }
 
@@ -235,9 +235,9 @@ public class LocationManager extends CordovaPlugin implements BeaconConsumer {
         final Method checkSelfPermissionMethod = getCheckSelfPermissionMethod();
 
         if (checkSelfPermissionMethod == null) {
-            Log.e(TAG, "Could not obtain the method Activity.checkSelfPermission method. Will " +
-                    "not check for ACCESS_COARSE_LOCATION even though we seem to be on a " +
-                    "supported version of Android.");
+            logError("Could not obtain the method Activity.checkSelfPermission method. Will " +
+                     "not check for ACCESS_COARSE_LOCATION even though we seem to be on a " +
+                     "supported version of Android.");
             return;
         }
 
@@ -246,20 +246,20 @@ public class LocationManager extends CordovaPlugin implements BeaconConsumer {
             final Integer permissionCheckResult = (Integer) checkSelfPermissionMethod.invoke(
                     activity, Manifest.permission.ACCESS_COARSE_LOCATION);
 
-            Log.i(TAG, "Permission check result for ACCESS_COARSE_LOCATION: " +
+            debugLog("Permission check result for ACCESS_COARSE_LOCATION: " +
                     String.valueOf(permissionCheckResult));
 
             if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
-                Log.i(TAG, "Permission for ACCESS_COARSE_LOCATION has already been granted.");
+                debugLog("Permission for ACCESS_COARSE_LOCATION has already been granted.");
                 return;
             }
 
             final Method requestPermissionsMethod = getRequestPermissionsMethod();
 
             if (requestPermissionsMethod == null) {
-                Log.e(TAG, "Could not obtain the method Activity.requestPermissions. Will " +
-                        "not ask for ACCESS_COARSE_LOCATION even though we seem to be on a " +
-                        "supported version of Android.");
+                logError("Could not obtain the method Activity.requestPermissions. Will " +
+                         "not ask for ACCESS_COARSE_LOCATION even though we seem to be on a " +
+                         "supported version of Android.");
                 return;
             }
 
@@ -278,11 +278,11 @@ public class LocationManager extends CordovaPlugin implements BeaconConsumer {
                                 PERMISSION_REQUEST_COARSE_LOCATION
                         );
                     } catch (IllegalAccessException e) {
-                        Log.e(TAG, "IllegalAccessException while requesting permission for " +
-                                "ACCESS_COARSE_LOCATION:", e);
+                        logError("IllegalAccessException while requesting permission for " +
+                                "ACCESS_COARSE_LOCATION:" + e.toString());
                     } catch (InvocationTargetException e) {
-                        Log.e(TAG, "InvocationTargetException while requesting permission for " +
-                                "ACCESS_COARSE_LOCATION:", e);
+                        logError("InvocationTargetException while requesting permission for " +
+                                "ACCESS_COARSE_LOCATION:" + e.toString());
                     }
                 }
             });
@@ -290,9 +290,9 @@ public class LocationManager extends CordovaPlugin implements BeaconConsumer {
             builder.show();
 
         } catch (final IllegalAccessException e) {
-            Log.w(TAG, "IllegalAccessException while checking for ACCESS_COARSE_LOCATION:", e);
+            debugWarn("IllegalAccessException while checking for ACCESS_COARSE_LOCATION:" + e.toString());
         } catch (final InvocationTargetException e) {
-            Log.w(TAG, "InvocationTargetException while checking for ACCESS_COARSE_LOCATION:", e);
+            debugWarn("InvocationTargetException while checking for ACCESS_COARSE_LOCATION:" + e.toString());
         }
     }
 
@@ -487,7 +487,7 @@ public class LocationManager extends CordovaPlugin implements BeaconConsumer {
                             callbackContext.sendPluginResult(result);
 
                         } catch (Exception e) {
-                            Log.e(TAG, "'monitoringDidFailForRegion' exception " + e.getCause());
+                            logError("'monitoringDidFailForRegion' exception " + e.getCause());
                             beaconServiceNotifier.monitoringDidFailForRegion(region, e);
 
                         }
@@ -525,7 +525,7 @@ public class LocationManager extends CordovaPlugin implements BeaconConsumer {
                             callbackContext.sendPluginResult(result);
 
                         } catch (Exception e) {
-                            Log.e(TAG, "'rangingBeaconsDidFailForRegion' exception " + e.getCause());
+                            logError("'rangingBeaconsDidFailForRegion' exception " + e.getCause());
                             beaconServiceNotifier.rangingBeaconsDidFailForRegion(region, e);
                         }
                     }
@@ -577,7 +577,7 @@ public class LocationManager extends CordovaPlugin implements BeaconConsumer {
                             callbackContext.sendPluginResult(result);
 
                         } catch (Exception e) {
-                            Log.e(TAG, "'startMonitoringForRegion' exception " + e.getCause());
+                            logError("'startMonitoringForRegion' exception " + e.getCause());
                             monitoringDidFailForRegion(region, e);
                         }
                     }
@@ -619,7 +619,7 @@ public class LocationManager extends CordovaPlugin implements BeaconConsumer {
                     callbackContext.sendPluginResult(result);
                 } catch (Exception e) {
                     //still failing, so kill all further event dispatch
-                    Log.e(TAG, eventType + " error " + e.getMessage());
+                    logError(eventType + " error " + e.getMessage());
                     callbackContext.error(eventType + " error " + e.getMessage());
                 }
             }
@@ -686,7 +686,7 @@ public class LocationManager extends CordovaPlugin implements BeaconConsumer {
                     result.setKeepCallback(true);
                     return result;
                 } catch (Exception e) {
-                    Log.e(TAG, "'enableBluetooth' service error: " + e.getCause());
+                    logError("'enableBluetooth' service error: " + e.getCause());
                     return new PluginResult(PluginResult.Status.ERROR, e.getMessage());
                 }
             }
@@ -705,7 +705,7 @@ public class LocationManager extends CordovaPlugin implements BeaconConsumer {
                     result.setKeepCallback(true);
                     return result;
                 } catch (Exception e) {
-                    Log.e(TAG, "'disableBluetooth' service error: " + e.getCause());
+                    logError("'disableBluetooth' service error: " + e.getCause());
                     return new PluginResult(PluginResult.Status.ERROR, e.getMessage());
                 }
             }
@@ -801,11 +801,11 @@ public class LocationManager extends CordovaPlugin implements BeaconConsumer {
                     return result;
 
                 } catch (RemoteException e) {
-                    Log.e(TAG, "'startMonitoringForRegion' service error: " + e.getCause());
+                    logError("'startMonitoringForRegion' service error: " + e.getCause());
                     beaconServiceNotifier.monitoringDidFailForRegion(region, e);
                     return new PluginResult(PluginResult.Status.ERROR, e.getMessage());
                 } catch (Exception e) {
-                    Log.e(TAG, "'startMonitoringForRegion' exception " + e.getCause());
+                    logError("'startMonitoringForRegion' exception " + e.getCause());
                     beaconServiceNotifier.monitoringDidFailForRegion(region, e);
                     return new PluginResult(PluginResult.Status.ERROR, e.getMessage());
                 }
@@ -831,10 +831,10 @@ public class LocationManager extends CordovaPlugin implements BeaconConsumer {
                     return result;
 
                 } catch (RemoteException e) {
-                    Log.e(TAG, "'stopMonitoringForRegion' service error: " + e.getCause());
+                    logError("'stopMonitoringForRegion' service error: " + e.getCause());
                     return new PluginResult(PluginResult.Status.ERROR, e.getMessage());
                 } catch (Exception e) {
-                    Log.e(TAG, "'stopMonitoringForRegion' exception " + e.getCause());
+                    logError("'stopMonitoringForRegion' exception " + e.getCause());
                     return new PluginResult(PluginResult.Status.ERROR, e.getMessage());
                 }
 
@@ -859,10 +859,10 @@ public class LocationManager extends CordovaPlugin implements BeaconConsumer {
                     return result;
 
                 } catch (RemoteException e) {
-                    Log.e(TAG, "'startRangingBeaconsInRegion' service error: " + e.getCause());
+                    logError("'startRangingBeaconsInRegion' service error: " + e.getCause());
                     return new PluginResult(PluginResult.Status.ERROR, e.getMessage());
                 } catch (Exception e) {
-                    Log.e(TAG, "'startRangingBeaconsInRegion' exception " + e.getCause());
+                    logError("'startRangingBeaconsInRegion' exception " + e.getCause());
                     return new PluginResult(PluginResult.Status.ERROR, e.getMessage());
                 }
             }
@@ -884,10 +884,10 @@ public class LocationManager extends CordovaPlugin implements BeaconConsumer {
                     return result;
 
                 } catch (RemoteException e) {
-                    Log.e(TAG, "'stopRangingBeaconsInRegion' service error: " + e.getCause());
+                    logError("'stopRangingBeaconsInRegion' service error: " + e.getCause());
                     return new PluginResult(PluginResult.Status.ERROR, e.getMessage());
                 } catch (Exception e) {
-                    Log.e(TAG, "'stopRangingBeaconsInRegion' exception " + e.getCause());
+                    logError("'stopRangingBeaconsInRegion' exception " + e.getCause());
                     return new PluginResult(PluginResult.Status.ERROR, e.getMessage());
                 }
             }
@@ -1352,10 +1352,10 @@ public class LocationManager extends CordovaPlugin implements BeaconConsumer {
 
     private void _handleExceptionOfCommand(CallbackContext callbackContext, Exception exception) {
 
-        Log.e(TAG, "Uncaught exception: " + exception.getMessage());
+        logError("Uncaught exception: " + exception.getMessage());
         final StackTraceElement[] stackTrace = exception.getStackTrace();
         final String stackTraceElementsAsString = Arrays.toString(stackTrace);
-        Log.e(TAG, "Stack trace: " + stackTraceElementsAsString);
+        logError("Stack trace: " + stackTraceElementsAsString);
 
         // When calling without a callback from the client side the command can be null.
         if (callbackContext == null) {
@@ -1382,13 +1382,20 @@ public class LocationManager extends CordovaPlugin implements BeaconConsumer {
     private void debugLog(String message) {
         if (debugEnabled) {
             Log.d(TAG, message);
+            webView.sendJavascript("console.debug('[" + TAG + "] " + warning + "')");
         }
     }
 
     private void debugWarn(String message) {
         if (debugEnabled) {
             Log.w(TAG, message);
+            webView.sendJavascript("console.warn('[" + TAG + "] "  + message + "')");
         }
+    }
+
+    private void logError(String message) {
+        Log.e(TAG, message);
+        webView.sendJavascript("console.error('[" + TAG + "] "  + message + "')");
     }
 
     //////// IBeaconConsumer implementation /////////////////////
